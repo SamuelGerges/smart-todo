@@ -95,9 +95,8 @@ export const signIn = async (req, res, next) => {
 
   const user = await User.findOne({
     email: email,
-    isConfirmed: true
+    isConfirmed: true,
   });
-
 
   if (!user) {
     next(

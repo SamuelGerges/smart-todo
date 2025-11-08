@@ -24,7 +24,7 @@ const taskSchema = new mongoose.Schema(
     },
     dueDate: {
       type: Date,
-      required:false
+      required: false,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -37,9 +37,34 @@ const taskSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    isDeleted: { 
+      type: Boolean,
+       default: false 
+    },
+
+    deletedAt: { 
+      type: Date, 
+      default: null
+    },
   },
   { timestamps: true }
 );
+
+taskSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    delete ret.__v;
+    return ret;
+  },
+});
+
+
+// Optional: Add a default query filter to hide deleted tasks
+taskSchema.pre(/^find/, function (next) {
+  if (!this.getQuery().includeDeleted) {
+    this.where({ isDeleted: false });
+  }
+  next();
+});
 
 const Task = mongoose.models.Task || model("Task", taskSchema);
 

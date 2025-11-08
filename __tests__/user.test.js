@@ -17,6 +17,7 @@ import { compareSync, hashSync } from "bcrypt";
 
 
 beforeAll(async () => {
+  jest.setTimeout(30000); 
   const url = process.env.MONGO_URL_TEST;
   await mongoose.connect(url);
 });

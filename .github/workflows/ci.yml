@@ -11,12 +11,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongo:6.0
-        ports:
-          - 27017:27017
-        options: --bind_ip_all
 
     env:
       NODE_ENV: test
@@ -25,19 +19,32 @@ jobs:
       MONGO_URL: mongodb://localhost:27017/smart-todo-test
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Install Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
+      # Step 3: Install MongoDB
+      - name: Install MongoDB
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mongodb
+          sudo systemctl start mongodb
+          sudo systemctl status mongodb
+
+      # Step 4: Install project dependencies
       - name: Install dependencies
         run: npm install
 
-      - name: Wait for MongoDB to start
+      # Step 5: Wait a few seconds for MongoDB
+      - name: Wait for MongoDB
         run: sleep 5
 
+      # Step 6: Run tests
       - name: Run tests
         run: npm test

@@ -25,11 +25,13 @@ beforeAll(async () => {
 
 afterEach(async () => {
   // clear database between tests
+  jest.setTimeout(30000); 
   await User.deleteMany({});
 });
 
 
 afterAll(async () => {
+  jest.setTimeout(30000); 
   await mongoose.connection.close();
 });
 

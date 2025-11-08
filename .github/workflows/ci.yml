@@ -16,35 +16,19 @@ jobs:
       NODE_ENV: test
       PORT: 3000
       JWT_SECRET_KEY: my_secret_key_123
-      MONGO_URL: mongodb://localhost:27017/smart-todo-test
+      MONGO_URL: mongodb+srv://<username>:<password>@cluster0.mongodb.net/smart-todo-test?retryWrites=true&w=majority
 
     steps:
-      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Install Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # Step 3: Install MongoDB
-      - name: Install MongoDB
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mongodb
-          sudo systemctl start mongodb
-          sudo systemctl status mongodb
-
-      # Step 4: Install project dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 5: Wait a few seconds for MongoDB
-      - name: Wait for MongoDB
-        run: sleep 5
-
-      # Step 6: Run tests
       - name: Run tests
         run: npm test

@@ -2,11 +2,9 @@ name: Node.js CI
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
   test:
@@ -16,29 +14,17 @@ jobs:
       NODE_ENV: test
       PORT: 3000
       JWT_SECRET_KEY: my_secret_key_123
-      MONGO_URL_TEST: mongodb://127.0.0.1:27017/smart-todo-test
 
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # Step 2: Setup Node.js
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # Step 3: Install project dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4 (optional): Start MongoDB if installed on runner
-      - name: Start MongoDB
-        run: |
-          sudo systemctl start mongodb || true
-          sleep 5
-
-      # Step 5: Run tests with extended timeout
       - name: Run tests
-        run: npm test -- --detectOpenHandles --forceExit
+        run: npm test

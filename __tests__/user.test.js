@@ -1,8 +1,8 @@
-import { jest } from "@jest/globals";
-import "dotenv/config";
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
+import { jest } from '@jest/globals';
 import request from "supertest";
-import mongoose from "mongoose";
-
+import "dotenv/config";
 
 jest.unstable_mockModule("../src/services/send.email.js", () => ({
   sendEmailService: jest.fn(() =>
@@ -16,23 +16,26 @@ const { sendEmailService } = await import("../src/services/send.email.js");
 import { compareSync, hashSync } from "bcrypt";
 
 
-beforeAll(async () => {
-  jest.setTimeout(30000); 
-  const url = process.env.MONGO_URL_TEST;
-  await mongoose.connect(url);
-});
+let mongoServer;
 
+beforeAll(async () => {
+  mongoServer = await MongoMemoryServer.create();
+  const uri = mongoServer.getUri();
+  await mongoose.connect(uri);
+});
 
 afterEach(async () => {
   // clear database between tests
-  jest.setTimeout(30000); 
-  await User.deleteMany({});
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    await collections[key].deleteMany({});
+  }
 });
 
-
 afterAll(async () => {
-  jest.setTimeout(30000); 
+  await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
+  await mongoServer.stop();
 });
 
 

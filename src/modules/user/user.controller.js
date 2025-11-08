@@ -12,10 +12,10 @@ export const signUp = async (req, res, next) => {
   });
 
   if (existingUser) {
-    next(
+    return next(
       new ErrorHandlerClass(
-        "409",
-        "Email already exists",
+        409,
+        "Error",
         "Email already exists",
         "signUp function",
         { email: email }
@@ -51,10 +51,10 @@ export const signUp = async (req, res, next) => {
   });
 
   if (isSentEmail.rejected.length) {
-    next(
+    return next(
       new ErrorHandlerClass(
-        "500",
-        "Failed to send verification email",
+        500,
+        "Error",
         "Failed to send verification email",
         "signUp function",
         { email: email }

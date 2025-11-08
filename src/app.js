@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Test route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the TODO API 🚀" });
+  res.json({ message: "Welcome to Smart TODO API" });
 });
 
 // Mount user routes under /users
